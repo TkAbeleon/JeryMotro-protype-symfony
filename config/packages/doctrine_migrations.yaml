@@ -1,0 +1,6 @@
+doctrine_migrations:
+    migrations_paths:
+        # Namespace et dossier des migrations générées par `doctrine:migrations:diff`
+        'DoctrineMigrations': '%kernel.project_dir%/migrations'
+
+    enable_profiler: false

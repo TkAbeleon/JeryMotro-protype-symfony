@@ -1,0 +1,10 @@
+twig:
+    file_name_pattern: '*.twig'
+    default_path: '%kernel.project_dir%/templates'
+
+    # Activer le mode strict (éviter les variables undefined silencieuses)
+    strict_variables: true
+
+when@test:
+    twig:
+        strict_variables: true

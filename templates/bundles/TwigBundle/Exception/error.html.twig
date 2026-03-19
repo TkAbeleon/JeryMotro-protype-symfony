@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}Erreur serveur — JeryMotro{% endblock %}
+{% block page_title %}Erreur serveur{% endblock %}
+
+{% block content %}
+<div style="text-align:center; padding:4rem 1rem; color:#8892b0">
+    <div style="font-size:5rem; margin-bottom:1rem">⚠️</div>
+    <h2 style="color:#ff9800; font-size:2rem; margin-bottom:.5rem">Erreur serveur</h2>
+    <p style="font-size:1rem; margin-bottom:2rem">
+        Une erreur est survenue. Vérifiez la connexion Supabase et les logs Symfony.
+    </p>
+    <a href="{{ path('dashboard_index') }}" class="btn-fire btn">
+        <i class="bi bi-house-fill"></i> Retour au Dashboard
+    </a>
+</div>
+{% endblock %}

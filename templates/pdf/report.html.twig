@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DejaVu Sans', sans-serif;
+            font-size: 10px;
+            color: #1a1a2e;
+            background: #fff;
+        }
+
+        /* ── Header ─────────────────────────────── */
+        .header {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 18px 24px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e63946;
+            margin-bottom: 2px;
+        }
+        .header .subtitle { font-size: 9px; color: #8892b0; }
+        .header .meta     { font-size: 8px; color: #4a5568; margin-top: 6px; }
+
+        /* ── Section titles ─────────────────────── */
+        h2 {
+            font-size: 11px;
+            font-weight: bold;
+            color: #1a1a2e;
+            border-left: 4px solid #e63946;
+            padding-left: 8px;
+            margin: 16px 0 8px;
+        }
+
+        /* ── Stat grid ──────────────────────────── */
+        .stats-grid {
+            display: table;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        .stats-grid .stat-cell {
+            display: table-cell;
+            width: 25%;
+            background: #f4f6fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+        }
+        .stat-cell .val { font-size: 18px; font-weight: bold; color: #e63946; }
+        .stat-cell .lbl { font-size: 8px; color: #6b7280; margin-top: 2px; }
+
+        /* ── Tables ─────────────────────────────── */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+            font-size: 9px;
+        }
+        thead th {
+            background: #1a1a2e;
+            color: #ccd6f6;
+            padding: 6px 8px;
+            text-align: left;
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        tbody tr:nth-child(even) { background: #f9fafb; }
+        tbody td { padding: 5px 8px; border-bottom: 1px solid #e5e7eb; color: #374151; }
+
+        /* ── Risk badges ────────────────────────── */
+        .badge-danger  { background: #fde8e8; color: #c0392b; padding: 1px 5px; border-radius: 3px; }
+        .badge-warning { background: #fef3cd; color: #b7791f; padding: 1px 5px; border-radius: 3px; }
+        .badge-info    { background: #e0f2fe; color: #1e40af; padding: 1px 5px; border-radius: 3px; }
+        .badge-success { background: #d1fae5; color: #065f46; padding: 1px 5px; border-radius: 3px; }
+        .badge-sent    { background: #d1fae5; color: #065f46; padding: 1px 5px; border-radius: 3px; }
+        .badge-failed  { background: #fde8e8; color: #c0392b; padding: 1px 5px; border-radius: 3px; }
+        .badge-pending { background: #fef3cd; color: #b7791f; padding: 1px 5px; border-radius: 3px; }
+
+        /* ── Footer ─────────────────────────────── */
+        .footer {
+            margin-top: 24px;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 8px;
+            color: #9ca3af;
+            text-align: center;
+        }
+
+        /* ── Page break ─────────────────────────── */
+        .page-break { page-break-after: always; }
+    </style>
+</head>
+<body>
+
+    <!-- ── Header ──────────────────────────────── -->
+    <div class="header">
+        <h1>🔥 JeryMotro Platform — Rapport de surveillance</h1>
+        <div class="subtitle">Détection intelligente des feux de brousse à Madagascar · NASA FIRMS</div>
+        <div class="meta">
+            Généré le : {{ generated_at|date('d/m/Y à H:i') }} UTC ·
+            Période couverte : 7 derniers jours ·
+            Sources : MODIS_NRT + VIIRS_NOAA20_NRT
+        </div>
+    </div>
+
+    <!-- ── Statistiques clés ────────────────────── -->
+    <h2>Statistiques clés</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Indicateur</th>
+                <th>Valeur</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Détections aujourd'hui</td>
+                <td><strong>{{ stats.today_count }}</strong></td>
+            </tr>
+            <tr>
+                <td>FRP maximum (24h)</td>
+                <td><strong>{{ stats.max_frp }} MW</strong></td>
+            </tr>
+            {% for row in stats.by_source %}
+            <tr>
+                <td>Détections {{ row.source }} (24h)</td>
+                <td>{{ row.cnt }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ── Détections par jour ──────────────────── -->
+    <h2>Détections par jour (7 derniers jours)</h2>
+    <table>
+        <thead>
+            <tr><th>Date</th><th>Nombre de détections</th></tr>
+        </thead>
+        <tbody>
+            {% for row in stats.daily %}
+            <tr>
+                <td>{{ row.day }}</td>
+                <td>{{ row.cnt }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="2" style="text-align:center;color:#9ca3af">Aucune donnée</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ── Hotspots ─────────────────────────────── -->
+    <h2>Hotspots critiques — FRP > 50 MW (7 derniers jours, max 50)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Source</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>FRP (MW)</th>
+                <th>Risque</th>
+                <th>Date/heure UTC</th>
+                <th>J/N</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in hotspots %}
+            <tr>
+                <td>{{ d.id }}</td>
+                <td>{{ d.source }}</td>
+                <td>{{ d.latitude|number_format(4) }}</td>
+                <td>{{ d.longitude|number_format(4) }}</td>
+                <td>
+                    <strong {% if d.frp > 100 %}style="color:#c0392b"{% endif %}>
+                        {{ d.frp|number_format(1) }}
+                    </strong>
+                </td>
+                <td>
+                    <span class="badge-{{ d.riskBadgeClass }}">{{ d.riskLabel }}</span>
+                </td>
+                <td>{{ d.acqDatetime|date('d/m/Y H:i') }}</td>
+                <td>{{ d.daynight == 'D' ? 'Jour' : 'Nuit' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8" style="text-align:center;color:#9ca3af">
+                    Aucun hotspot sur la période
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ── Alertes envoyées ─────────────────────── -->
+    <h2>Alertes envoyées (30 dernières)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Destinataire</th>
+                <th>Email</th>
+                <th>Statut</th>
+                <th>Créée le</th>
+                <th>Envoyée le</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alert in alerts %}
+            <tr>
+                <td>{{ alert.id }}</td>
+                <td>{{ alert.user.name }}</td>
+                <td>{{ alert.user.email }}</td>
+                <td>
+                    <span class="badge-{{ alert.status }}">{{ alert.statusLabel }}</span>
+                </td>
+                <td>{{ alert.createdAt|date('d/m/Y H:i') }}</td>
+                <td>{{ alert.sentAt ? alert.sentAt|date('d/m/Y H:i') : '—' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align:center;color:#9ca3af">Aucune alerte</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ── Footer ───────────────────────────────── -->
+    <div class="footer">
+        JeryMotro Platform · Mémoire L3 Génie Logiciel · 2026 ·
+        Données NASA FIRMS (MODIS + VIIRS) ·
+        Pipeline automatisé n8n + Supabase
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+{% block title %}Alertes — JeryMotro{% endblock %}
+{% block page_title %}<i class="bi bi-bell-fill"></i> Alertes{% endblock %}
+
+{% block content %}
+
+<div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
+    <a href="{{ path('alert_new') }}" class="btn-fire btn">
+        <i class="bi bi-plus-lg"></i> Nouvelle alerte
+    </a>
+</div>
+
+<div class="dark-card">
+    <div class="dark-card-header">
+        <i class="bi bi-list-ul"></i> Historique — 50 dernières alertes
+    </div>
+    <div style="overflow-x:auto">
+        <table class="dark-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Destinataire</th>
+                    <th>Email</th>
+                    <th>Détection liée</th>
+                    <th>Message</th>
+                    <th>Statut</th>
+                    <th>Créée le</th>
+                    <th>Envoyée le</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for alert in alerts %}
+                <tr>
+                    <td style="color:#4a5568">{{ alert.id }}</td>
+                    <td><strong style="color:#ccd6f6">{{ alert.user.name }}</strong></td>
+                    <td style="font-size:.78rem;color:#8892b0">{{ alert.user.email }}</td>
+                    <td>
+                        {% if alert.detection %}
+                            <span class="badge bg-secondary">#{{ alert.detection.id }}</span>
+                            <span class="badge bg-{{ alert.detection.riskBadgeClass }}">{{ alert.detection.riskLabel }}</span>
+                        {% else %}
+                            <span style="color:#4a5568">—</span>
+                        {% endif %}
+                    </td>
+                    <td style="max-width:240px">
+                        <span style="font-size:.78rem;color:#8892b0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block">
+                            {{ alert.message|slice(0,80) }}{% if alert.message|length > 80 %}…{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge bg-{{ alert.statusBadgeClass }}">{{ alert.statusLabel }}</span>
+                    </td>
+                    <td style="font-size:.78rem">{{ alert.createdAt|date('d/m/Y H:i') }}</td>
+                    <td style="font-size:.78rem">{{ alert.sentAt ? alert.sentAt|date('d/m/Y H:i') : '—' }}</td>
+                    <td>
+                        {% if alert.status == 'failed' %}
+                        <form method="post" action="{{ path('alert_retry', {id: alert.id}) }}" style="display:inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('retry_alert_' ~ alert.id) }}">
+                            <button class="btn btn-sm btn-outline-warning" title="Renvoyer">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="9" style="text-align:center;color:#4a5568;padding:2.5rem">
+                        <i class="bi bi-bell-slash" style="font-size:2rem;display:block;margin-bottom:.5rem"></i>
+                        Aucune alerte.<br>
+                        <a href="{{ path('alert_new') }}" style="color:#e63946">Créer la première</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

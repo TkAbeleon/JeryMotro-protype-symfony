@@ -1,0 +1,19 @@
+parameters:
+    n8n_webhook_url: '%env(N8N_WEBHOOK_URL)%'
+
+services:
+    _defaults:
+        autowire:      true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    # Injection explicite de l'URL n8n et du client HTTP dans le service mailer
+    App\Service\N8nMailerService:
+        arguments:
+            $n8nWebhookUrl: '%n8n_webhook_url%'

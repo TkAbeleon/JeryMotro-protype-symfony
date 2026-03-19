@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ user is defined ? 'Modifier' : 'Nouvel' }} utilisateur — JeryMotro{% endblock %}
+{% block page_title %}
+    <i class="bi bi-person-{{ user is defined ? 'gear' : 'plus-fill' }}"></i>
+    {{ user is defined ? 'Modifier ' ~ user.name : 'Nouvel utilisateur' }}
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="dark-card">
+            <div class="dark-card-header">
+                <i class="bi bi-person-fill text-info"></i>
+                {{ user is defined ? 'Modifier le profil' : 'Créer un destinataire d\'alertes' }}
+            </div>
+
+            <div style="padding:1.5rem">
+                {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+                    <div class="mb-3">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        {{ form_errors(form.name) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.email) }}
+                        {{ form_widget(form.email) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form_label(form.phone) }}
+                        {{ form_widget(form.phone) }}
+                        {{ form_errors(form.phone) }}
+                    </div>
+
+                    <div style="display:flex;gap:.75rem;align-items:center">
+                        <button type="submit" class="btn-fire btn">
+                            <i class="bi bi-check-lg"></i>
+                            {{ user is defined ? 'Enregistrer les modifications' : 'Créer l\'utilisateur' }}
+                        </button>
+                        <a href="{{ path('user_index') }}" class="btn btn-outline-secondary btn-sm">
+                            Annuler
+                        </a>
+                    </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

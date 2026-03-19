@@ -1,0 +1,30 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    http_method_override: true
+
+    # Session
+    session:
+        handler_id: null
+        cookie_secure: auto
+        cookie_samesite: lax
+        storage_factory_id: session.storage.factory.native
+
+    # PHP Attributes pour les routes
+    router:
+        utf8: true
+
+    # Validation Symfony
+    validation:
+        email_validation_mode: html5
+
+    # Activer les assets
+    assets: ~
+
+    # Désactiver notifier (pas utilisé)
+    notifier: false
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file

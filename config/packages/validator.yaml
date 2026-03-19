@@ -1,0 +1,6 @@
+framework:
+    validation:
+        # Active les annotations/attributes de validation
+        enable_attributes: true
+        # Email validation moderne
+        email_validation_mode: html5

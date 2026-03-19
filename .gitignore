@@ -1,0 +1,43 @@
+###> Symfony ###
+/.env
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< Symfony ###
+
+###> Sécurité — ne jamais committer ###
+*.env
+.env.local
+
+###> Editeurs ###
+/.idea/
+/.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+###> Logs & cache ###
+/var/cache/
+/var/log/
+/var/sessions/
+
+###> Node (si frontend assets) ###
+/node_modules/
+/public/build/
+npm-debug.log
+yarn-error.log
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###

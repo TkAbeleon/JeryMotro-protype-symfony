@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nouvelle alerte — JeryMotro{% endblock %}
+{% block page_title %}<i class="bi bi-bell-fill"></i> Nouvelle alerte{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="dark-card">
+            <div class="dark-card-header">
+                <i class="bi bi-send-fill text-danger"></i>
+                Créer et envoyer une alerte via n8n
+            </div>
+
+            <div style="padding:1.5rem">
+
+                {# Explication du flux #}
+                <div class="alert alert-info mb-4" style="font-size:.82rem">
+                    <i class="bi bi-info-circle-fill"></i>
+                    L'alerte est enregistrée en base de données, puis envoyée par email via le workflow
+                    <strong>n8n</strong> (<code>madfire-alert</code>).
+                </div>
+
+                {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+                    <div class="mb-3">
+                        {{ form_label(form.user) }}
+                        {{ form_widget(form.user) }}
+                        {{ form_errors(form.user) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(form.detection) }}
+                        {{ form_widget(form.detection) }}
+                        <div style="font-size:.72rem;color:#4a5568;margin-top:.25rem">
+                            Affiche les détections avec FRP > 15 MW dans les 48 dernières heures.
+                        </div>
+                        {{ form_errors(form.detection) }}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form_label(form.message) }}
+                        {{ form_widget(form.message) }}
+                        {{ form_errors(form.message) }}
+                    </div>
+
+                    <div style="display:flex;gap:.75rem;align-items:center">
+                        <button type="submit" class="btn-fire btn">
+                            <i class="bi bi-send-fill"></i> Envoyer l'alerte
+                        </button>
+                        <a href="{{ path('alert_index') }}" class="btn btn-outline-secondary btn-sm">
+                            Annuler
+                        </a>
+                    </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
