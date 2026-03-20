@@ -28,8 +28,14 @@
         /* ── Global & Typography ─────────────────────────── */
         body {
             background-color: var(--bg-main);
+            background: linear-gradient(135deg, rgba(6, 9, 7, 0.94) 0%, rgba(10, 17, 13, 0.98) 100%), url('/images/sidebar_bg.png') no-repeat center center / cover fixed;
             color: var(--text-main);
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        @keyframes subtleFadeIn {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         /* ── Sidebar ─────────────────────────────────────── */
@@ -121,8 +127,9 @@
         .main-wrap {
             margin-left: var(--sidebar-w);
             min-height: 100vh;
-            background: var(--bg-main);
+            background: transparent;
             color: var(--text-main);
+            animation: subtleFadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
         .topbar {
             background: rgba(10, 17, 13, 0.85);
