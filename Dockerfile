@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install and configure PHP extensions
-# Explicitly install pdo, pdo_pgsql and pdo_mysql for maximum compatibility
 RUN docker-php-ext-configure intl \
     && docker-php-ext-install pdo pdo_pgsql pdo_mysql intl opcache zip mbstring dom xml
 
@@ -31,11 +30,10 @@ ENV HOME=/home/hfuser \
     COMPOSER_ALLOW_SUPERUSER=0 \
     COMPOSER_MEMORY_LIMIT=-1
 
-# Dummy env vars to satisfy container compilation during build phase
-ENV DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=16&charset=utf8" \
-    APP_SECRET="dummy_secret_for_build_phase" \
-    N8N_WEBHOOK_URL="https://dummy.n8n.webhook" \
-    DEFAULT_URI="http://localhost"
+# Build-time environment variables (only used during build)
+# Note: We don't set DATABASE_URL as a persistent ENV here to avoid overriding HF secrets at runtime
+ARG DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=16&charset=utf8"
+ARG APP_SECRET="dummy_secret_for_build_phase"
 
 WORKDIR $HOME/app
 
@@ -47,16 +45,21 @@ RUN mkdir -p var/cache var/log && \
     chmod -R 777 var/
 
 # Setup a fallback .env and FORCE prod environment
+# CRITICAL: We remove DATABASE_URL from .env to ensure the Hugging Face Secret is used at runtime
 RUN if [ ! -f .env ]; then cp .env.example .env; fi && \
     sed -i 's/APP_ENV=dev/APP_ENV=prod/g' .env && \
     sed -i 's/APP_DEBUG=true/APP_DEBUG=false/g' .env && \
+    sed -i '/DATABASE_URL=/d' .env && \
     echo "DEFAULT_URI=http://localhost" >> .env
 
-# Install PHP dependencies without dev packages
-RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
+# Install PHP dependencies
+# We provide the build-time DATABASE_URL specifically for this command
+RUN DATABASE_URL=$DATABASE_URL APP_SECRET=$APP_SECRET \
+    composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
 
-# Manual cache warmup (suppress errors during build)
-RUN php bin/console cache:warmup --env=prod || true
+# Manual cache warmup (suppress errors)
+RUN DATABASE_URL=$DATABASE_URL APP_SECRET=$APP_SECRET \
+    php bin/console cache:warmup --env=prod || true
 
 EXPOSE 7860
 
