@@ -33,7 +33,8 @@ ENV HOME=/home/hfuser \
 # Dummy env vars to satisfy container compilation during build phase
 ENV DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=16&charset=utf8" \
     APP_SECRET="dummy_secret_for_build_phase" \
-    N8N_WEBHOOK_URL="https://dummy.n8n.webhook"
+    N8N_WEBHOOK_URL="https://dummy.n8n.webhook" \
+    DEFAULT_URI="http://localhost"
 
 WORKDIR $HOME/app
 
@@ -45,11 +46,10 @@ RUN mkdir -p var/cache var/log && \
     chmod -R 777 var/
 
 # Setup a fallback .env and FORCE prod environment
-# We use sed to ensure APP_ENV is prod and APP_DEBUG is false, 
-# preventing .env.example values from causing a crash by loading dev bundles
 RUN if [ ! -f .env ]; then cp .env.example .env; fi && \
     sed -i 's/APP_ENV=dev/APP_ENV=prod/g' .env && \
-    sed -i 's/APP_DEBUG=true/APP_DEBUG=false/g' .env
+    sed -i 's/APP_DEBUG=true/APP_DEBUG=false/g' .env && \
+    echo "DEFAULT_URI=http://localhost" >> .env
 
 # Install PHP dependencies without dev packages
 RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
