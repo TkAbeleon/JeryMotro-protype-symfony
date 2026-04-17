@@ -56,6 +56,11 @@
             50%  { box-shadow: 0 0 30px rgba(255,51,51,.6); }
             100% { box-shadow: 0 0 10px rgba(255,51,51,.2); }
         }
+        @keyframes pulseGlowImg {
+            0%   { filter: drop-shadow(0 0 10px rgba(255,51,51,.2)); transform: scale(1); }
+            50%  { filter: drop-shadow(0 0 30px rgba(255,51,51,.6)); transform: scale(1.05); }
+            100% { filter: drop-shadow(0 0 10px rgba(255,51,51,.2)); transform: scale(1); }
+        }
 
         /* ── Global Loader ───────────────────────────────── */
         .global-loader {
@@ -562,8 +567,8 @@
 <!-- ── GLOBAL LOADER ──────────────────────────────────────── -->
 <div class="global-loader" id="globalLoader">
     <div class="loader-content">
-        <div class="loader-logo-wrapper">
-            <i class="bi bi-fire loader-icon"></i>
+        <div class="loader-logo-wrapper" style="background: transparent; box-shadow: none; animation: pulseGlowImg 2s infinite;">
+            <img src="https://i.ibb.co/Nw10cBf/logo.jpg" alt="Logo JeryMotro" style="width: 120px; height: 120px; border-radius: 20px; object-fit: cover;">
         </div>
         <h2 class="loader-title">JERYMOTRO</h2>
         <p class="loader-subtitle">Chargement des données de télédétection spatiale...</p>
