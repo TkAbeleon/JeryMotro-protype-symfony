@@ -16,6 +16,7 @@ class N8nAgentService
         private readonly HttpClientInterface $client,
         private readonly LoggerInterface     $logger,
         private readonly string              $n8nAgentWebhookUrl,
+        private readonly string              $hfToken,
     ) {}
 
     /**
@@ -40,8 +41,9 @@ class N8nAgentService
                 'json'    => $payload,
                 'timeout' => 30,
                 'headers' => [
-                    'Accept'       => 'application/json',
-                    'Content-Type' => 'application/json',
+                    'Accept'        => 'application/json',
+                    'Content-Type'  => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->hfToken,
                 ],
             ]);
 

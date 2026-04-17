@@ -17,6 +17,7 @@ class N8nMailerService
         private readonly HttpClientInterface $client,
         private readonly LoggerInterface     $logger,
         private readonly string              $n8nWebhookUrl,
+        private readonly string              $hfToken,
     ) {}
 
     /**
@@ -49,7 +50,10 @@ class N8nMailerService
             $response = $this->client->request('POST', $this->n8nWebhookUrl, [
                 'json'    => $payload,
                 'timeout' => 15,
-                'headers' => ['Accept' => 'application/json'],
+                'headers' => [
+                    'Accept'        => 'application/json',
+                    'Authorization' => 'Bearer ' . $this->hfToken,
+                ],
             ]);
 
             $statusCode = $response->getStatusCode();
