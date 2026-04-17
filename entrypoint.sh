@@ -10,9 +10,13 @@ echo "[STARTUP] DB host: ${DB_HOST}"
 echo "============================================"
 
 # Write all HF secrets to .env before PHP starts
+# IMPORTANT: Strip leading/trailing quotes from DATABASE_URL if present
+# (HF secret users sometimes include quotes in the value)
 if [ -n "$DATABASE_URL" ]; then
-    echo "DATABASE_URL=${DATABASE_URL}" >> /home/hfuser/app/.env
-    echo "[STARTUP] DATABASE_URL written to .env"
+    CLEAN_DB_URL=$(echo "$DATABASE_URL" | sed "s/^['\"]//;s/['\"]$//")
+    echo "DATABASE_URL=${CLEAN_DB_URL}" >> /home/hfuser/app/.env
+    echo "[STARTUP] DATABASE_URL written to .env (stripped quotes: $([ "$CLEAN_DB_URL" != "$DATABASE_URL" ] && echo YES || echo NO))"
+    export DATABASE_URL="$CLEAN_DB_URL"
 fi
 if [ -n "$APP_SECRET" ]; then echo "APP_SECRET=${APP_SECRET}" >> /home/hfuser/app/.env; fi
 if [ -n "$N8N_WEBHOOK_URL" ]; then echo "N8N_WEBHOOK_URL=${N8N_WEBHOOK_URL}" >> /home/hfuser/app/.env; fi
