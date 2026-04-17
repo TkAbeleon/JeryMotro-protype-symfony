@@ -44,3 +44,4 @@ JeryMotroConception/*
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+.codex
