@@ -26,7 +26,14 @@ USER hfuser
 ENV HOME=/home/hfuser \
     PATH=/home/hfuser/.local/bin:$PATH \
     APP_ENV=prod \
-    APP_DEBUG=0
+    APP_DEBUG=0 \
+    COMPOSER_ALLOW_SUPERUSER=0 \
+    COMPOSER_MEMORY_LIMIT=-1
+
+# Dummy env vars to satisfy container compilation during build
+ENV DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=16&charset=utf8" \
+    APP_SECRET="dummy_secret_for_build_phase" \
+    N8N_WEBHOOK_URL="https://dummy.n8n.webhook"
 
 WORKDIR $HOME/app
 
@@ -37,14 +44,15 @@ COPY --chown=hfuser:hfuser . $HOME/app/
 RUN mkdir -p var/cache var/log && \
     chmod -R 777 var/
 
-# Setup a fallback .env if missing (important for build scripts)
+# Setup a fallback .env if missing
 RUN if [ ! -f .env ]; then cp .env.example .env; fi
 
-# Install PHP dependencies without dev packages
-RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs
+# Install PHP dependencies
+# --no-scripts prevents auto-scripts like cache:clear from failing due to missing secrets/db during build
+RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
 
-# Prepare cache
-RUN php bin/console cache:warmup || true
+# Manual cache warmup (optional, suppressed error because secrets are not yet available)
+RUN php bin/console cache:warmup --env=prod || true
 
 EXPOSE 7860
 
