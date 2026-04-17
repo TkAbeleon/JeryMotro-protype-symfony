@@ -53,8 +53,82 @@
         }
         @keyframes pulseGlow {
             0%   { box-shadow: 0 0 10px rgba(255,51,51,.2); }
-            50%  { box-shadow: 0 0 20px rgba(255,51,51,.5); }
+            50%  { box-shadow: 0 0 30px rgba(255,51,51,.6); }
             100% { box-shadow: 0 0 10px rgba(255,51,51,.2); }
+        }
+
+        /* ── Global Loader ───────────────────────────────── */
+        .global-loader {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(10,17,13, 1); /* Dark solid background */
+            z-index: 99999; /* Highest priority */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.6s;
+        }
+        .global-loader.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .loader-logo-wrapper {
+            width: 120px; height: 120px;
+            background: rgba(255,51,51,.1);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 2rem;
+            animation: pulseGlow 1.5s infinite;
+        }
+        .loader-icon {
+            font-size: 5rem;
+            color: var(--fire-red);
+            filter: drop-shadow(0 0 15px var(--fire-red));
+        }
+        .loader-title {
+            color: #fff;
+            font-weight: 800;
+            letter-spacing: 4px;
+            font-size: 2rem;
+            margin-bottom: .8rem;
+            text-shadow: 0 0 15px rgba(255,255,255,.2);
+        }
+        .loader-subtitle {
+            color: #a8b2d1;
+            font-size: 1rem;
+            max-width: 300px;
+            line-height: 1.5;
+            margin: 0 auto;
+        }
+        .loader-progress {
+            width: 250px;
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        .loader-progress-bar {
+            position: absolute;
+            top: 0; left: 0;
+            height: 100%;
+            width: 30%;
+            background: var(--fire-red);
+            box-shadow: 0 0 15px var(--fire-red);
+            animation: loadingBar 1.2s infinite ease-in-out;
+            border-radius: 2px;
+        }
+        @keyframes loadingBar {
+            0% { transform: translateX(-100%); width: 20%; }
+            50% { width: 50%; }
+            100% { transform: translateX(400%); width: 20%; }
         }
 
         /* ── Sidebar ─────────────────────────────────────── */
@@ -485,6 +559,21 @@
 </head>
 <body>
 
+<!-- ── GLOBAL LOADER ──────────────────────────────────────── -->
+<div class="global-loader" id="globalLoader">
+    <div class="loader-content">
+        <div class="loader-logo-wrapper">
+            <i class="bi bi-fire loader-icon"></i>
+        </div>
+        <h2 class="loader-title">JERYMOTRO</h2>
+        <p class="loader-subtitle">Chargement des données de télédétection spatiale...</p>
+        
+        <div class="loader-progress mt-4">
+            <div class="loader-progress-bar"></div>
+        </div>
+    </div>
+</div>
+
 <!-- ── Sidebar Backdrop (mobile overlay) ──────────── -->
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
@@ -606,6 +695,31 @@
     document.addEventListener('keydown', e => {
         if (e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar();
     });
+
+    // ── Global Loader Logic ────────────────────────────
+    const loader = document.getElementById('globalLoader');
+
+    // Hide loader smoothly when page is fully loaded
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            if(loader) loader.classList.add('fade-out');
+        }, 300); // Guarantees the animation is seen briefy & smoothly
+    });
+
+    // Show loader when navigating to new pages inside the app
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('a');
+        if (target && target.href && !target.href.includes('#') && target.target !== '_blank') {
+            if (target.hostname === window.location.hostname) {
+                e.preventDefault(); 
+                if(loader) loader.classList.remove('fade-out');
+                setTimeout(() => {
+                    window.location.href = target.href;
+                }, 250); // Delay allows fade-in animation to render
+            }
+        }
+    });
+
 })();
 </script>
 {% block scripts %}{% endblock %}
