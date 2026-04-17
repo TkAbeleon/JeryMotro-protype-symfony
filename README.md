@@ -15,6 +15,8 @@ Bienvenue sur le repository du prototype Symfony de la plateforme **JeryMotro**.
 
 **JeryMotro** est une plateforme de télédétection spatiale avancée, dédiée à la surveillance en temps réel des feux de brousse à Madagascar. Ce prototype démontre l'intégration de capacités d'analyse de données (satellites MODIS/VIIRS), d'une interface de tableau de bord moderne et d'un assistant IA.
 
+🌍 **Accéder à l'application en direct** : [JeryMotro sur Hugging Face Spaces](https://rtsikynyantsa-jerymotro-platform-symfony.hf.space)
+
 ---
 
 ## 🏗️ Architecture Technique
