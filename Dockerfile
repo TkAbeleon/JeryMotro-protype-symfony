@@ -30,9 +30,8 @@ ENV HOME=/home/hfuser \
     COMPOSER_ALLOW_SUPERUSER=0 \
     COMPOSER_MEMORY_LIMIT=-1
 
-# Build-time environment variables (only used during build)
-# Note: We don't set DATABASE_URL as a persistent ENV here to avoid overriding HF secrets at runtime
-ARG DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=16&charset=utf8"
+# Build-time environment variables
+# We do NOT set DATABASE_URL here to ensure it's unresolved during build-time compilation
 ARG APP_SECRET="dummy_secret_for_build_phase"
 
 WORKDIR $HOME/app
@@ -45,21 +44,21 @@ RUN mkdir -p var/cache var/log && \
     chmod -R 777 var/
 
 # Setup a fallback .env and FORCE prod environment
-# CRITICAL: We remove DATABASE_URL from .env to ensure the Hugging Face Secret is used at runtime
+# CRITICAL: We completely remove DATABASE_URL and secrets from the image to ensure runtime secrets are used.
 RUN if [ ! -f .env ]; then cp .env.example .env; fi && \
     sed -i 's/APP_ENV=dev/APP_ENV=prod/g' .env && \
     sed -i 's/APP_DEBUG=true/APP_DEBUG=false/g' .env && \
     sed -i '/DATABASE_URL=/d' .env && \
+    sed -i '/APP_SECRET=/d' .env && \
     echo "DEFAULT_URI=http://localhost" >> .env
 
-# Install PHP dependencies
-# We provide the build-time DATABASE_URL specifically for this command
-RUN DATABASE_URL=$DATABASE_URL APP_SECRET=$APP_SECRET \
+# Install PHP dependencies without dev packages
+# We do NOT run scripts here because they might require DATABASE_URL
+RUN APP_SECRET=$APP_SECRET \
     composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs --no-scripts
 
-# Manual cache warmup (suppress errors)
-RUN DATABASE_URL=$DATABASE_URL APP_SECRET=$APP_SECRET \
-    php bin/console cache:warmup --env=prod || true
+# We skip cache:warmup during the build to prevent baking dummy configuration.
+# The container will be compiled at runtime with the real Hugging Face Secrets.
 
 EXPOSE 7860
 
