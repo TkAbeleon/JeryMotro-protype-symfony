@@ -519,7 +519,7 @@
         </span>
     </div>
 
-    <div class="page-body">
+    <div class="page-body {% block page_body_class %}{% endblock %}">
         <!-- Flash messages -->
         {% for label, messages in app.flashes %}
             {% for msg in messages %}
