@@ -57,7 +57,11 @@ RUN APP_SECRET=$APP_SECRET \
 # We skip cache:warmup during the build to prevent baking dummy configuration.
 # The container will be compiled at runtime with the real Hugging Face Secrets.
 
+# Copy entrypoint script
+COPY --chown=hfuser:hfuser entrypoint.sh /home/hfuser/entrypoint.sh
+RUN chmod +x /home/hfuser/entrypoint.sh
+
 EXPOSE 7860
 
-# Run Symfony builtin server
-CMD ["php", "-S", "0.0.0.0:7860", "-t", "public"]
+# Use entrypoint for diagnostics + server start
+CMD ["/home/hfuser/entrypoint.sh"]
