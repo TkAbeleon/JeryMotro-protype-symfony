@@ -14,9 +14,9 @@ framework:
         # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
         #app: cache.adapter.apcu
 
-        # Namespaced pools use the above "app" backend by default
-        pools:
-            doctrine.system_cache_pool:
-                adapter: cache.system
-            doctrine.result_cache_pool:
-                adapter: cache.app
+        # Pools are disabled or handled by defaults to avoid "service not found" errors in prod
+        # pools:
+        #     doctrine.system_cache_pool:
+        #         adapter: cache.system
+        #     doctrine.result_cache_pool:
+        #         adapter: cache.app
