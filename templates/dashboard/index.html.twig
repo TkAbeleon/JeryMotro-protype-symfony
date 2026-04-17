@@ -6,18 +6,18 @@
 {% block content %}
 
 {# ── Accueil / Description ───────────────────────────────── #}
-<div class="dark-card mb-4 position-relative overflow-hidden" style="background: linear-gradient(135deg, rgba(10, 17, 13, 0.92) 0%, rgba(19, 32, 24, 0.85) 100%), url('/images/sidebar_bg.png') center/cover; padding: 2.5rem; border-left: 4px solid var(--fire-orange);">
-    <div class="d-flex align-items-center justify-content-between gap-4">
-        <div style="z-index: 2;">
-            <h3 style="color: #fff; font-weight: 800; font-size: 1.8rem; margin-bottom: 0.8rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-                Surveillance Stratégique — JeryMotro <i class="bi bi-fire" style="color: var(--fire-red);"></i>
+<div class="dark-card mb-4 position-relative overflow-hidden" style="background: linear-gradient(135deg, rgba(10,17,13,.92) 0%, rgba(19,32,24,.85) 100%); padding: clamp(1.2rem, 4vw, 2.5rem); border-left: 4px solid var(--fire-orange);">
+    <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+        <div style="z-index:2; min-width:0; flex:1">
+            <h3 style="color:#fff; font-weight:800; font-size:clamp(1.2rem,3vw,1.8rem); margin-bottom:.8rem; text-shadow:0 2px 10px rgba(0,0,0,.5);">
+                Surveillance Stratégique — JeryMotro <i class="bi bi-fire" style="color:var(--fire-red)"></i>
             </h3>
-            <p style="color: rgba(226, 237, 229, 0.9); font-size: 1.05rem; line-height: 1.6; max-width: 800px; margin-bottom: 1.2rem; text-shadow: 0 1px 4px rgba(0,0,0,0.5);">
-                <strong>JeryMotro</strong> est une plateforme de télédétection spatiale dédiée à la surveillance en temps réel des feux de brousse à Madagascar. En exploitant les signaux satellitaires, le système identifie instantanément les départs de feu et coordonne les alertes critiques.
+            <p style="color:rgba(226,237,229,.9); font-size:clamp(.85rem,2vw,1.05rem); line-height:1.6; margin-bottom:0; text-shadow:0 1px 4px rgba(0,0,0,.5);">
+                <strong>JeryMotro</strong> est une plateforme de télédétection spatiale dédiée à la surveillance en temps réel des feux de brousse à Madagascar.
             </p>
         </div>
-        <div class="d-none d-lg-flex align-items-center justify-content-center" style="z-index: 2; width: 120px; height: 120px; background: rgba(0,0,0,0.3); border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 0 20px rgba(255,51,51,0.2);">
-            <i class="bi bi-globe-africa" style="font-size: 3.5rem; color: rgba(255,51,51,0.8); text-shadow: 0 0 20px rgba(255,51,51,0.5);"></i>
+        <div class="d-none d-lg-flex align-items-center justify-content-center flex-shrink-0" style="z-index:2; width:100px; height:100px; background:rgba(0,0,0,.3); border-radius:50%; border:1px solid rgba(255,255,255,.1); box-shadow:inset 0 0 20px rgba(255,51,51,.2);">
+            <i class="bi bi-globe-africa" style="font-size:3rem; color:rgba(255,51,51,.8); text-shadow:0 0 20px rgba(255,51,51,.5);"></i>
         </div>
     </div>
 </div>
@@ -97,7 +97,7 @@
         </a>
     </div>
 
-    <div style="overflow-x:auto">
+    <div class="table-responsive-dark">
         <table class="dark-table">
             <thead>
                 <tr>
