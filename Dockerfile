@@ -43,14 +43,11 @@ COPY --chown=hfuser:hfuser . $HOME/app/
 RUN mkdir -p var/cache var/log && \
     chmod -R 777 var/
 
-# Setup a fallback .env and FORCE prod environment
-# CRITICAL: We completely remove DATABASE_URL and secrets from the image to ensure runtime secrets are used.
-RUN if [ ! -f .env ]; then cp .env.example .env; fi && \
-    sed -i 's/APP_ENV=dev/APP_ENV=prod/g' .env && \
-    sed -i 's/APP_DEBUG=true/APP_DEBUG=false/g' .env && \
-    sed -i '/DATABASE_URL=/d' .env && \
-    sed -i '/APP_SECRET=/d' .env && \
-    echo "DEFAULT_URI=http://localhost" >> .env
+# ALWAYS generate a fresh .env with production defaults
+# We NEVER use the committed .env because it may contain dev settings including DATABASE_URL pointing to localhost
+# The DATABASE_URL is NOT set here — HF Secret injects it as a real OS env var at runtime
+RUN printf "APP_ENV=prod\nAPP_DEBUG=false\nDEFAULT_URI=http://localhost\n" > .env && \
+    echo "" >> .env
 
 # Install PHP dependencies without dev packages
 # We do NOT run scripts here because they might require DATABASE_URL
