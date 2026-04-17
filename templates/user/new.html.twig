@@ -10,9 +10,11 @@
 <div class="row justify-content-center">
     <div class="col-lg-6">
         <div class="dark-card">
-            <div class="dark-card-header">
-                <i class="bi bi-person-fill text-info"></i>
-                {{ user is defined ? 'Modifier le profil' : 'Créer un destinataire d\'alertes' }}
+            <div class="dark-card-header d-flex align-items-center gap-3">
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(33,150,243,.1);display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-person-fill" style="color:#42a5f5;filter:drop-shadow(0 0 5px #42a5f5)"></i>
+                </div>
+                <span>{{ user is defined ? 'Modifier le profil' : 'Créer un destinataire d\'alertes' }}</span>
             </div>
 
             <div style="padding:1.5rem">

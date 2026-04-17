@@ -176,9 +176,19 @@
             min-height: 100vh;
             background: transparent;
             color: var(--text-main);
-            animation: subtleFadeIn .8s cubic-bezier(.2,.8,.2,1) forwards;
             transition: margin-left .3s cubic-bezier(.4,0,.2,1);
         }
+        /* Cascading entrance animations for page content */
+        .page-body > * {
+            opacity: 0;
+            animation: subtleFadeIn .6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        .page-body > *:nth-child(1) { animation-delay: 0.05s; }
+        .page-body > *:nth-child(2) { animation-delay: 0.15s; }
+        .page-body > *:nth-child(3) { animation-delay: 0.25s; }
+        .page-body > *:nth-child(4) { animation-delay: 0.35s; }
+        .page-body > *:nth-child(5) { animation-delay: 0.45s; }
+        .page-body > *:nth-child(6) { animation-delay: 0.55s; }
         .topbar {
             background: rgba(10,17,13,.75);
             backdrop-filter: blur(16px);

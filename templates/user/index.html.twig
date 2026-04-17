@@ -11,8 +11,11 @@
 </div>
 
 <div class="dark-card">
-    <div class="dark-card-header">
-        <i class="bi bi-people"></i> Liste des utilisateurs ({{ users|length }})
+    <div class="dark-card-header d-flex align-items-center gap-3">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(33,150,243,.1);display:flex;align-items:center;justify-content:center;">
+            <i class="bi bi-people" style="color:#42a5f5;filter:drop-shadow(0 0 5px #42a5f5)"></i>
+        </div>
+        <span>Liste des utilisateurs ({{ users|length }})</span>
     </div>
 
     <div class="table-responsive-dark">

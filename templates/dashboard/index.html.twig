@@ -65,23 +65,27 @@
 {# ── Charts ──────────────────────────────────────────────── #}
 <div class="row g-3 mb-4">
     <div class="col-lg-8">
-        <div class="dark-card">
+        <div class="dark-card h-100">
             <div class="dark-card-header">
-                <i class="bi bi-bar-chart-fill text-danger"></i>
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,51,51,.1);display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-bar-chart-fill" style="color:var(--fire-red);filter:drop-shadow(0 0 5px var(--fire-red))"></i>
+                </div>
                 Détections par jour — 7 derniers jours
             </div>
-            <div style="padding:1rem">
+            <div style="padding:1.5rem">
                 <canvas id="dailyChart" height="90"></canvas>
             </div>
         </div>
     </div>
     <div class="col-lg-4">
-        <div class="dark-card">
+        <div class="dark-card h-100">
             <div class="dark-card-header">
-                <i class="bi bi-pie-chart-fill text-warning"></i>
+                <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,119,0,.1);display:flex;align-items:center;justify-content:center;">
+                    <i class="bi bi-pie-chart-fill" style="color:var(--fire-orange);filter:drop-shadow(0 0 5px var(--fire-orange))"></i>
+                </div>
                 MODIS vs VIIRS (24h)
             </div>
-            <div style="padding:1rem; display:flex; align-items:center; justify-content:center; min-height:200px">
+            <div style="padding:1.5rem; display:flex; align-items:center; justify-content:center; min-height:200px">
                 <canvas id="sourceChart" height="200"></canvas>
             </div>
         </div>
@@ -90,10 +94,16 @@
 
 {# ── Hotspots table ──────────────────────────────────────── #}
 <div class="dark-card">
-    <div class="dark-card-header" style="justify-content:space-between">
-        <span><i class="bi bi-geo-alt-fill text-danger"></i> Hotspots récents (FRP > 50 MW — 48h)</span>
-        <a href="{{ path('dashboard_export_pdf') }}" target="_blank" class="btn-fire btn">
-            <i class="bi bi-file-earmark-pdf"></i> Exporter PDF
+    <div class="dark-card-header d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <span class="d-flex align-items-center gap-2">
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,51,51,.1);display:flex;align-items:center;justify-content:center;">
+                <i class="bi bi-geo-alt-fill" style="color:var(--fire-red);filter:drop-shadow(0 0 5px var(--fire-red))"></i>
+            </div>
+            Hotspots récents (FRP > 50 MW — 48h)
+        </span>
+        <a href="{{ path('dashboard_export_pdf') }}" target="_blank" class="btn-fire btn btn-sm d-inline-flex align-items-center gap-2">
+            <i class="bi bi-file-earmark-pdf"></i>
+            <span class="d-none d-sm-inline">Exporter PDF</span>
         </a>
     </div>
 
