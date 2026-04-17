@@ -1,14 +1,9 @@
 doctrine:
     dbal:
-        driver: pdo_pgsql
-        url: '%env(resolve:DATABASE_URL)%'
+        url: '%env(DATABASE_URL)%'
         # Exclure les tables gérées par le pipeline n8n (ne pas toucher en migration)
         # Seules "users" et "alerts" sont gérées par Symfony Migrations
         schema_filter: ~^(users|alerts)$~
-
-        # Options PostgreSQL / Supabase
-        options:
-            sslmode: require
 
     orm:
         auto_generate_proxy_classes: true
