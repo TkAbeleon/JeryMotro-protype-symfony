@@ -5,6 +5,7 @@ colorFrom: red
 colorTo: orange
 sdk: docker
 app_port: 7860
+app_file: Dockerfile
 pinned: false
 ---
 
@@ -18,5 +19,5 @@ Le fichier `Dockerfile` à la racine prend en charge l'installation de PHP 8.3, 
 ## Architecture 
 - **Backend:** Symfony 7.2
 - **Base de données:** PostgreSQL (via Supabase)
-- **Modèle IA (Agent):** Groq RAG
+- **Modèle IA (Agent):** Mistral RAG
 - **Orchestration:** n8n Pipeline
