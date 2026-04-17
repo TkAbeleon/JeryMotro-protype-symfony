@@ -1,44 +1,52 @@
 FROM php:8.3-cli
 
-# 1. Installation des dépendances système nécessaires
+# Install system dependencies needed for Symfony
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libpq-dev \
     libicu-dev \
+    libzip-dev \
+    libonig-dev \
+    libxml2-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# 2. Installation des extensions PHP (PostgreSQL + Intl)
+# Install and configure PHP extensions
 RUN docker-php-ext-configure intl \
-    && docker-php-ext-install pdo_pgsql intl opcache
+    && docker-php-ext-install pdo_pgsql intl opcache zip mbstring dom xml
 
-# 3. Installation de Composer
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-# 4. Configuration Utilisateur Hugging Face (UID 1000 OBLIGATOIRE)
-# Hugging Face exige que le conteneur tourne sans privilèges root sous l'UID 1000
+# Setup user for Hugging Face (UID 1000 is required)
 RUN useradd -m -u 1000 hfuser
 USER hfuser
 
-# 5. Définition du répertoire de travail et des chemins locaux
+# Define home and workdir
 ENV HOME=/home/hfuser \
-    PATH=/home/hfuser/.local/bin:$PATH
+    PATH=/home/hfuser/.local/bin:$PATH \
+    APP_ENV=prod \
+    APP_DEBUG=0
+
 WORKDIR $HOME/app
 
-# 6. Copie des fichiers de l'application avec les bonnes permissions
+# Copy application files with appropriate ownership
 COPY --chown=hfuser:hfuser . $HOME/app/
 
-# 7. Préparation de l'environnement (Fichier .env factice si manquant)
+# Ensure var directories exist and have proper permissions
+RUN mkdir -p var/cache var/log && \
+    chmod -R 777 var/
+
+# Setup a fallback .env if missing (important for build scripts)
 RUN if [ ! -f .env ]; then cp .env.example .env; fi
 
-# 8. Installation des dépendances Symfony (sans interaction)
+# Install PHP dependencies without dev packages
 RUN composer install --no-interaction --optimize-autoloader --no-dev --ignore-platform-reqs
 
-# Nettoyage et préparation du cache pour Symfony
-RUN php bin/console cache:clear --env=prod || true
+# Prepare cache
+RUN php bin/console cache:warmup || true
 
-# 9. Exposition du port Hugging Face par défaut
 EXPOSE 7860
 
-# 10. Commande de lancement (Serveur PHP embarqué pour contourner Apache)
+# Run Symfony builtin server
 CMD ["php", "-S", "0.0.0.0:7860", "-t", "public"]

@@ -1,0 +1,13 @@
+.git/
+.gitignore
+.idea/
+.vscode/
+
+.env.local
+.env.*.local
+.env.dev
+
+vendor/
+var/
+public/images/logo.png
+public/images/sidebar_bg.png
