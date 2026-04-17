@@ -1,5 +1,6 @@
 doctrine:
     dbal:
+        driver: pdo_pgsql
         url: '%env(resolve:DATABASE_URL)%'
         # Exclure les tables gérées par le pipeline n8n (ne pas toucher en migration)
         # Seules "users" et "alerts" sont gérées par Symfony Migrations

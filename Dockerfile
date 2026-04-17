@@ -12,8 +12,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install and configure PHP extensions
+# Explicitly install pdo, pdo_pgsql and pdo_mysql for maximum compatibility
 RUN docker-php-ext-configure intl \
-    && docker-php-ext-install pdo_pgsql intl opcache zip mbstring dom xml
+    && docker-php-ext-install pdo pdo_pgsql pdo_mysql intl opcache zip mbstring dom xml
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
